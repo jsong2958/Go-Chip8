@@ -1,91 +1,49 @@
 package main
 
-type Chip8 struct {
-	memory [4096]byte
-	V      [16]byte
-	I      uint16
-	pc     uint16
-	stack  [16]uint16
-	sp     uint16
-	gfx    [64 * 32]byte
-
-	delayTimer int
-}
-
-func newChip8() *Chip8 {
-	c := &Chip8{}
-	c.pc = 0x200
-
-	var fonts = [80]byte{
-		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-		0x20, 0x60, 0x20, 0x20, 0x70, // 1
-		0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-		0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-		0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-		0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-		0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-		0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-		0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-		0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-		0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-		0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-		0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-		0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-		0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-		0xF0, 0x80, 0xF0, 0x80, 0x80, // F
-	}
-
-	for i := 0; i < len(fonts); i++ {
-		c.memory[i+0x050] = fonts[i]
-	}
-
-	return c
-}
-
-func emulate(c *Chip8) {
-	opcode := (uint16(c.memory[c.pc]) << 8) | uint16(c.memory[c.pc+1])
-
-	switch opcode & 0xF000 {
-
-	case 0x0000:
-		switch opcode & 0x000F {
-		case 0x0000:
-
-		}
-
-	case 0x1000:
-		c.pc = opcode & 0x0FFF
-		return
-
-	case 0x6000:
-		x := (opcode & 0x0F00) >> 8
-		c.V[x] = byte(opcode & 0x00FF)
-
-	case 0x7000:
-		x := (opcode & 0x0F00) >> 8
-		c.V[x] += byte(opcode & 0x00FF)
-
-	case 0xA000:
-		c.I = opcode & 0x0FFF
-
-	case 0xD000:
-		x := (opcode & 0x0F00) >> 8
-		y := (opcode & 0x00F0) >> 8
-		h := (opcode * 0x000F) >> 8
-
-		vx := c.V[x]
-		vy := c.V[y]
-	}
-
-	c.pc += 2
-
-	if ()
-}
+import (
+	emu "Go-Chip8/emulator"
+	"fmt"
+	"os"
+	"time"
+)
 
 func main() {
-	c := newChip8()
-	c.memory[0x200] = 0x12
-	c.memory[0x201] = 0x34
+	c := emu.NewChip8()
 
-	emulate(c)
+	var filename string
+
+	if len(os.Args) < 2 {
+		fmt.Println("Enter rom filename")
+		return
+	}
+
+	filename = os.Args[1]
+
+	err := emu.LoadROM(c, filename)
+	if err != nil {
+		fmt.Println("error", err)
+		return
+	}
+
+	timer := time.NewTicker(time.Second / 60)
+	defer timer.Stop()
+
+	for range timer.C {
+
+		emu.Emulate(c)
+
+		if c.DrawFlag {
+			emu.DrawScreen(c)
+			c.DrawFlag = false
+		}
+
+		if c.DelayTimer > 0 {
+			c.DelayTimer--
+		}
+
+		if c.SoundTimer > 0 {
+			c.SoundTimer--
+		}
+	}
+
 }

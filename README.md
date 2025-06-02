@@ -22,4 +22,7 @@ Must download SDL2 Library for your os platform, which is included in the go-sdl
 ```
 go run main.go <path-to-ch8-rom>
 ```
-
+## Features
+- Graphics implemented with SDL2
+- All [35 opcodes](https://en.wikipedia.org/wiki/CHIP-8#Opcode_table)
+- **Beep tone not implemented**

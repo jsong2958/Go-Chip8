@@ -1,7 +1,7 @@
 
 # Go-Chip8
 
-[CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) emulator written in Go.
+[CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) emulator written in Go
 
 ![chip8](chip8.png)
 

@@ -7,7 +7,7 @@ type Chip8 struct {
 	pc         uint16
 	stack      [16]uint16
 	sp         uint16
-	gfx        [64 * 32]byte
+	Gfx        [64 * 32]byte
 	DrawFlag   bool
 	DelayTimer int
 	SoundTimer int
@@ -42,4 +42,12 @@ func NewChip8() *Chip8 {
 	}
 
 	return c
+}
+
+func (c *Chip8) SetKey(i byte, down bool) {
+	if down {
+		c.key[i] = 1
+	} else {
+		c.key[i] = 0
+	}
 }

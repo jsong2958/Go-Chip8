@@ -1,14 +1,18 @@
 package emulator
 
+import "fmt"
+
 func Emulate(c *Chip8) {
 	opcode := (uint16(c.memory[c.pc]) << 8) | uint16(c.memory[c.pc+1])
+
+	fmt.Printf("Opcode: 0x%04X at PC: 0x%03X\n", opcode, c.pc)
 
 	switch opcode & 0xF000 {
 
 	case 0x0000:
 		switch opcode & 0x000F {
 		case 0x0000:
-			c.gfx = [64 * 32]byte{}
+			c.Gfx = [64 * 32]byte{}
 
 		case 0x000E:
 			c.sp--
@@ -142,10 +146,10 @@ func Emulate(c *Chip8) {
 					X := (int(vx) + j) % 64
 					Y := (int(vy) + i) % 32
 					index := Y*64 + X
-					if c.gfx[index] == 1 {
+					if c.Gfx[index] == 1 {
 						c.V[0xF] = 0x1
 					}
-					c.gfx[index] ^= 1
+					c.Gfx[index] ^= 1
 				}
 			}
 		}

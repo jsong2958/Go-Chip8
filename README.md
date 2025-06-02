@@ -1,5 +1,5 @@
 
-# Go-CHIP-8
+# gochip8
 
 [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) emulator written in Go
 

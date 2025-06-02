@@ -15,7 +15,7 @@ go get -u github.com/veandco/go-sdl2/sdl
 
 ## Prerequisites
 
-Must download SDL2 Library for your os platform, which is included in the go-sdl2 documentation
+Must download SDL2 Library for your OS platform, which is included in the go-sdl2 documentation
 
 ## Usage
 
